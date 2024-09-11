@@ -1,0 +1,38 @@
+.profile-container {
+  align-items: center;
+  width: 1200px;
+  background-color: #3B104B;
+  padding: 20px;
+  border-radius: 8px;
+}
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #561853;
+  width: 100%;
+  border-radius: 8px;
+  padding: 20px 0px;
+}
+
+.profile-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;  /* Tạo ảnh tròn */
+  object-fit: cover;  /* Đảm bảo ảnh không bị biến dạng */
+  border: 4px solid #fff;  /* Đường viền trắng xung quanh ảnh */
+  margin-bottom: 20px;
+}
+.name {
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+a {
+  text-decoration: none;
+  color: #132bb0;
+}
+
+a:hover {
+  color: #1766F6;
+}

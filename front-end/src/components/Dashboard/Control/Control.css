@@ -1,0 +1,116 @@
+.control {
+  flex: 1;
+  display: flex;
+  padding: 20px;
+  background-color: #561853;
+  border-radius: 8px;
+  justify-content: space-around;
+  flex-direction: column;
+}
+
+.device {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 4px 8px #0000001a;
+  padding: 20px 0px;
+  flex: 1;
+  width: 100%;
+}
+
+.device:nth-child() {
+  margin-top: 20px;
+}
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex: 5;
+}
+
+.fan {
+  font-size: 80px;
+}
+.fan-on {
+  color: lightblue;
+  animation: spin 1.5s linear infinite;
+  transition: transform 1s ease-in-out;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.AC {
+  font-size: 100px;
+}
+.AC-on {
+  color: lightblue;
+}
+.down {
+  transform: rotate(90deg);
+}
+.blowing-1,
+.blowing-2 {
+  position: absolute;
+  left: 0px;
+  font-size: 50px;
+  color: lightblue;
+}
+.blowing-1 {
+  top: 20px;
+  animation: blow 1s linear infinite;
+}
+
+.blowing-2 {
+  top: 30px;
+  animation: blow 1s linear infinite;
+}
+
+@keyframes blow {
+  0% {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+}
+.light {
+  font-size: 80px;
+  transition: filter 0.3s ease, color 0.3s ease;
+}
+
+.light-on {
+  color: yellow;
+  filter: drop-shadow(0 0 10px yellow) drop-shadow(0 0 20px yellow);
+}
+
+/* button */
+.button {
+  flex: 3;
+}
+button {
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 50px;
+}
+.on {
+  background-color: red;
+  color: #ffffff;
+}
+.off {
+  background-color: green;
+  color: #ffffff;
+}

@@ -1,0 +1,51 @@
+.sensor-info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.sensor-1 {
+  color: red;
+  background-color: #561853;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 650;
+}
+
+.sensor-2 {
+  color: #3c00ff;
+  background-color: #561853;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  padding: 30px;
+  margin: 0px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 650;
+}
+
+.sensor-3 {
+  color: yellow;
+  background-color: #561853;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 650;
+}

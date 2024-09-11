@@ -1,0 +1,52 @@
+.menu-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.menu {
+  display: flex;
+  background-color: #3B104B;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  width: 1200px;
+}
+.logo {
+  align-items: center;
+  justify-content: center;
+}
+.menu ul {
+  display: flex;
+  margin: 0px;
+  padding: 0px 20px;
+}
+
+.menu ul li {
+  list-style: none;
+  padding: 20px 0px;
+}
+
+.menu ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.menu ul li .actived {
+  font-weight: 780;
+  background-color: #000000;
+}
+
+.content {
+  border-radius: 8px;
+  display: flex;
+  width: 1200px;
+  justify-content: center;
+  align-items: center;
+}
+.layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

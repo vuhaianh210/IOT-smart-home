@@ -1,0 +1,137 @@
+.action-history-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1200px;
+  background-color: #3B104B;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+.action-history {
+  border-radius: 8px;
+  color: #ffffff;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.action-history td {
+  padding: 10px;
+  text-align: center;
+}
+
+.action-history th {
+  background-color: #4caf50;
+  color: #000000;
+  white-space: nowrap;
+  text-align: center;
+  padding: 0px 10px;
+}
+
+.action-history tr {
+  background-color: #561853;
+}
+
+.action-history tr:hover {
+  background-color: #dddddd;
+  color: #000000;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.pagination button {
+  background-color: #4caf50;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+  height: 36px;
+  width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination button:disabled {
+  background-color: #ffffff;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.pagination span {
+  font-size: 16px;
+  margin: 0 10px;
+  color: #ffffff;
+}
+
+.top-left {
+  border-top-left-radius: 8px;
+}
+.top-right {
+  border-top-right-radius: 8px;
+}
+.bot-left {
+  border-bottom-left-radius: 8px;
+}
+.bot-right {
+  border-bottom-right-radius: 8px;
+}
+
+.filter {
+  display: flex;
+  justify-content: left;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.filter label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #ffffff;
+  margin-right: 10px;
+}
+
+.filter input {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 180px;
+  font-size: 14px;
+}
+.button-container {
+  position: relative;
+}
+.filter button {
+  background-color: #4caf50;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+  height: 36px;
+  width: 90px;
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter button:hover {
+  background-color: #45a049; /* Màu khi hover */
+}
+
+.button-sort {
+  display: inline-flex;
+  flex-direction: column; /* Sắp xếp biểu tượng theo chiều dọc */
+  margin-left: 5px; /* Khoảng cách giữa chữ và biểu tượng */
+  vertical-align: middle;
+}

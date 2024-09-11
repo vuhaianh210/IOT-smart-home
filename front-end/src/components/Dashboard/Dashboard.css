@@ -1,0 +1,9 @@
+.chart-control {
+  display: flex;
+}
+.dashboard {
+  background-color: #3B104B;
+  border-radius: 8px;
+  padding: 20px;
+  width: 1200px;
+}
