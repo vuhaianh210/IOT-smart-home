@@ -264,7 +264,7 @@ const DataSensor = () => {
             })
           ) : (
             <tr>
-              <td colSpan="5">No data available</td>
+              <td className="bot-left bot-right" colSpan="5">No data available</td>
             </tr>
           )}
         </tbody>

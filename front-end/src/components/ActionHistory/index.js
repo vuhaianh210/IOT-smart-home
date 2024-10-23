@@ -240,7 +240,7 @@ const ActionHistory = () => {
             })
           ) : (
             <tr>
-              <td colSpan="4">No data available</td>
+              <td colSpan="4" className="bot-left bot-right">No data available</td>
             </tr>
           )}
         </tbody>
