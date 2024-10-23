@@ -11,10 +11,8 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import { useSensorData } from "../../UseSensorData";
 import "./ChartComponent.css";
 
-// Register the components you need
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -26,12 +24,9 @@ Chart.register(
   Filler
 );
 
-const ChartComponent = () => {
-  const sensorData = useSensorData();
-
-  const [labels, setLabels] = useState([]);
+const ChartComponent = ({ data }) => {
   const [chartData, setChartData] = useState({
-    labels: [],
+    labels: [], // Nhãn trục x
     datasets: [
       {
         label: "Ánh sáng",
@@ -39,7 +34,7 @@ const ChartComponent = () => {
         borderColor: "yellow",
         backgroundColor: "yellow",
         fill: false,
-        yAxisID: "lightAxis", // Liên kết với trục y cho ánh sáng
+        yAxisID: "lightAxis",
         tension: 0.4,
       },
       {
@@ -48,7 +43,7 @@ const ChartComponent = () => {
         borderColor: "blue",
         backgroundColor: "blue",
         fill: false,
-        yAxisID: "tempHumidityAxis", // Liên kết với trục y cho nhiệt độ và độ ẩm
+        yAxisID: "tempHumidityAxis",
         tension: 0.4,
       },
       {
@@ -57,54 +52,44 @@ const ChartComponent = () => {
         borderColor: "red",
         backgroundColor: "red",
         fill: false,
-        yAxisID: "tempHumidityAxis", // Liên kết với trục y cho nhiệt độ và độ ẩm
+        yAxisID: "tempHumidityAxis",
         tension: 0.4,
       },
     ],
   });
+
   useEffect(() => {
-    const currentTime = new Date();
-    const timeLabel = currentTime.toLocaleTimeString();
-  
-    setLabels((prevLabels) => {
-      const updatedLabels = [...prevLabels, timeLabel].slice(-10);
-      return updatedLabels;
-    });
-  
-    setChartData((prevChartData) => {
-      const updatedLabels = [...labels, timeLabel].slice(-10);
-      const updatedDatasets = prevChartData.datasets.map((dataset, index) => {
-        const newData = [
-          ...dataset.data,
-          index === 0
-            ? sensorData.light
-            : index === 1
-            ? sensorData.humidity
-            : sensorData.temperature,
-        ];
-        return { ...dataset, data: newData.slice(-10) };
-      });
-  
-      return {
-        ...prevChartData,
-        labels: updatedLabels,
-        datasets: updatedDatasets,
-      };
-    });
-    
-  }, [sensorData]);
+    if (!data || data.length === 0) return; // Kiểm tra nếu không có dữ liệu
+    // Lấy thời gian từ API (giả sử thuộc tính là 'timestamp')
+    const newLabels = data.map((item) => new Date(item.timestamp).toLocaleTimeString()); // Chuyển đổi thời gian sang định dạng dễ đọc
+    const lightData = data.map((item) => item.light);
+    const humidityData = data.map((item) => item.humidity);
+    const temperatureData = data.map((item) => item.temperature);
+
+    setChartData((prevChartData) => ({
+      ...prevChartData,
+      labels: newLabels, // Cập nhật labels với giá trị thời gian
+      datasets: [
+        { ...prevChartData.datasets[0], data: lightData },
+        { ...prevChartData.datasets[1], data: humidityData },
+        { ...prevChartData.datasets[2], data: temperatureData },
+      ],
+    }));
+  }, [data]);
+
   const options = {
     responsive: true,
     color: "#ffffff",
     scales: {
       x: {
+        reverse: true,
         ticks: {
-          color: "#00ff00", // Đổi màu nhãn thời gian trục x (màu xanh lá)
+          color: "#00ff00",
         },
       },
       lightAxis: {
         type: "linear",
-        position: "right", // Trục ánh sáng ở bên phải
+        position: "right",
         ticks: {
           beginAtZero: true,
           color: "#ffffff",
@@ -117,7 +102,7 @@ const ChartComponent = () => {
       },
       tempHumidityAxis: {
         type: "linear",
-        position: "left", // Trục nhiệt độ và độ ẩm ở bên trái
+        position: "left",
         ticks: {
           beginAtZero: true,
           color: "#ffffff",

@@ -26,7 +26,7 @@ function Profile() {
                 target="_blank"
                 rel="noreferrer"
               >
-                https://github.com/vuhaianh210
+                https://github.com/vuhaianh210/IOT-smart-home
               </a>
             </div>
           </div>

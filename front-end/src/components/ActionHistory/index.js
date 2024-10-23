@@ -1,92 +1,118 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ActionHistory.css";
 import { GoTriangleUp, GoTriangleDown } from "react-icons/go";
+import axios from "axios";
 
 const ActionHistory = () => {
-  // Hàm tạo dữ liệu giả lập cho cảm biến
-  const generateFakeData = () => {
-    const devices = ["Fan", "AC", "Light"];
-    const statuses = ["On", "Off"];
-    return Array.from({ length: 50 }, (_, index) => ({
-      id: index + 1,
-      devices: devices[Math.floor(Math.random()*devices.length)],
-      statuses: statuses[Math.floor(Math.random() * statuses.length)],
-      timestamp: new Date(
-        Date.now() - Math.floor(Math.random() * 100000000)
-      ).toISOString(),
-    }));
-  };
-
-  const [data] = useState(generateFakeData());
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  // State cho tìm kiếm theo thời gian
+  const [data, setData] = useState([]);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [filteredData, setFilteredData] = useState(data); // State cho dữ liệu đã lọc
-  // State cho sắp xếp
+  const [device, setDevice] = useState("");
+  const [action, setAction] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
   const [sortColumn, setSortColumn] = useState("");
-  const [sortDirection, setSortDirection] = useState("asc");
+  const [sortDirection, setSortDirection] = useState("desc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const startISO = startTime ? new Date(startTime).toISOString() : "";
+      const endISO = endTime ? new Date(endTime).toISOString() : "";
+      console.log("Start Time ISO 8601:", startISO);
+      console.log("End Time ISO 8601:", endISO);
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/devices/history`,
+          {
+            params: {
+              page: currentPage,
+              limit,
+              startTime : startISO,
+              endTime : endISO,
+              device,
+              action,
+              sortColumn,
+              sortDirection: sortDirection.toUpperCase(),
+            },
+          }
+        );
+        console.log("Response data:", response.data);
+        setData(response.data.results);
+        setFilteredData(response.data.results);
+        setTotalPages(Math.ceil(response.data.total / limit));
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      }
+    };
+
+    fetchData();
+  }, [
+    currentPage,
+    startTime,
+    endTime,
+    device,
+    action,
+    sortColumn,
+    sortDirection,
+  ]);
+
   // Hàm lọc dữ liệu theo khoảng thời gian
   const handleSearch = () => {
-    if (!startTime || !endTime) {
-      setFilteredData(data); // Hiển thị tất cả dữ liệu nếu không có thời gian lọc
-      return;
-    }
-
-    const start = new Date(startTime).getTime();
-    const end = new Date(endTime).getTime();
-
-    const newFilteredData = data.filter((item) => {
-      const itemTime = new Date(item.timestamp).getTime();
-      return itemTime >= start && itemTime <= end;
-    });
-
-    setFilteredData(newFilteredData); // Cập nhật dữ liệu đã lọc
-    setCurrentPage(1); // Đặt lại trang về 1
+    setCurrentPage(1); // Đặt lại trang về 1 khi tìm kiếm
   };
+
+  // Hàm sắp xếp
   const handleSort = (column, direction) => {
     setSortColumn(column);
     setSortDirection(direction);
-
-    const sortedData = [...filteredData].sort((a, b) => {
-      if (column === "timestamp") {
-        return direction === "asc"
-          ? new Date(a[column]) - new Date(b[column])
-          : new Date(b[column]) - new Date(a[column]);
-        } else if (typeof a[column] === 'number') {
-          return direction === "asc" ? a[column] - b[column] : b[column] - a[column];
-        } else if (typeof a[column] === 'string') {
-          return direction === "asc"
-            ? a[column].localeCompare(b[column])
-            : b[column].localeCompare(a[column]);
-        }})
-
-    setFilteredData(sortedData);
   };
 
-  // Tính toán chỉ số phần tử hiện tại
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  // Hàm xử lý nút phân trang
+  const renderPagination = () => {
+    const pages = [];
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+    if (totalPages <= 5) {
+      // Nếu tổng số trang ít hơn hoặc bằng 5, hiển thị tất cả các trang
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Chỉ hiển thị "Trang đầu" nếu trang hiện tại không phải là trang đầu
+      if (currentPage > 2) {
+        pages.push("Trang đầu");
+      }
+      // Hiển thị dấu ba chấm trước nếu trang hiện tại > 4
+      if (currentPage > 2) {
+        pages.push("...");
+      }
+      // Hiển thị 2 trang trước và sau trang hiện tại
+      const startPage = Math.max(1, currentPage - 1);
+      const endPage = Math.min(totalPages, currentPage + 1);
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      // Hiển thị dấu ba chấm sau nếu trang hiện tại < tổng số trang - 3
+      if (currentPage < totalPages - 1) {
+        pages.push("...");
+      }
+      // Chỉ hiển thị "Trang cuối" nếu trang hiện tại không phải là trang cuối
+      if (currentPage < totalPages - 1) {
+        pages.push("Trang cuối");
+      }
     }
+
+    return pages;
   };
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+  const handlePageChange = (page) => {
+    if (page === "..." || page < 1 || page > totalPages) return;
+    setCurrentPage(page);
   };
 
   return (
     <div className="action-history-container">
-      {/* Trường nhập cho khoảng thời gian */}
       <div className="filter">
         <label>
           Start Time:
@@ -102,6 +128,22 @@ const ActionHistory = () => {
             type="datetime-local"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
+          />
+        </label>
+        <label>
+          Device:
+          <input
+            type="text"
+            value={device}
+            onChange={(e) => setDevice(e.target.value)}
+          />
+        </label>
+        <label>
+          Action:
+          <input
+            type="text"
+            value={action}
+            onChange={(e) => setAction(e.target.value)}
           />
         </label>
         <div className="button-container">
@@ -133,13 +175,13 @@ const ActionHistory = () => {
               Thiết bị
               <span className="button-sort">
                 <span
-                  onClick={() => handleSort("devices", "asc")}
+                  onClick={() => handleSort("device", "asc")}
                   style={{ cursor: "pointer" }}
                 >
                   <GoTriangleUp />
                 </span>
                 <span
-                  onClick={() => handleSort("devices", "desc")}
+                  onClick={() => handleSort("device", "desc")}
                   style={{ cursor: "pointer" }}
                 >
                   <GoTriangleDown />
@@ -150,13 +192,13 @@ const ActionHistory = () => {
               Trạng thái
               <span className="button-sort">
                 <span
-                  onClick={() => handleSort("statuses", "asc")}
+                  onClick={() => handleSort("action", "asc")}
                   style={{ cursor: "pointer" }}
                 >
                   <GoTriangleUp />
                 </span>
                 <span
-                  onClick={() => handleSort("statuses", "desc")}
+                  onClick={() => handleSort("action", "desc")}
                   style={{ cursor: "pointer" }}
                 >
                   <GoTriangleDown />
@@ -183,20 +225,15 @@ const ActionHistory = () => {
           </tr>
         </thead>
         <tbody>
-          {currentItems.length > 0 ? (
-            currentItems.map((item, index) => {
-              const isLastRow = index === currentItems.length - 1;
-              return (
-                <tr key={item.timestamp}>
-                  <td className={isLastRow ? "bot-left" : ""}>{item.id}</td>
-                  <td>{item.devices}</td>
-                  <td>{item.statuses}</td>
-                  <td className={isLastRow ? "bot-right" : ""}>
-                    {new Date(item.timestamp).toLocaleString()}
-                  </td>
-                </tr>
-              );
-            })
+          {filteredData.length > 0 ? (
+            filteredData.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.device}</td>
+                <td>{item.action}</td>
+                <td>{new Date(item.timestamp).toLocaleString()}</td>
+              </tr>
+            ))
           ) : (
             <tr>
               <td colSpan="4">No data available</td>
@@ -205,16 +242,29 @@ const ActionHistory = () => {
         </tbody>
       </table>
 
+      {/* Nút phân trang */}
       <div className="pagination">
-        <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button onClick={handleNextPage} disabled={currentPage === totalPages || totalPages === 0}>
-          Next
-        </button>
+        {renderPagination().map((page, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              if (page === "Trang đầu") {
+                handlePageChange(1);
+              } else if (page === "Trang cuối") {
+                handlePageChange(totalPages);
+              } else {
+                handlePageChange(page);
+              }
+            }}
+            className={currentPage === page ? "active" : ""}
+            disabled={
+              (page === "Trang đầu" && currentPage === 1) ||
+              (page === "Trang cuối" && currentPage === totalPages)
+            }
+          >
+            {page}
+          </button>
+        ))}
       </div>
     </div>
   );
