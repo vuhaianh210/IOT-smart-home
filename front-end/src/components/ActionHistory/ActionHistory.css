@@ -47,22 +47,17 @@
   background-color: #4caf50;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
   border-radius: 4px;
   height: 36px;
-  width: 90px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.pagination button:disabled {
-  background-color: #ffffff;
-  cursor: not-allowed;
-}
-
-.pagination button:hover:not(:disabled) {
-  background-color: #45a049;
+.pagination button.active {
+  background-color: #561853;
+  color: #ffffff;
 }
 
 .pagination span {
@@ -107,6 +102,15 @@
   width: 180px;
   font-size: 14px;
 }
+
+.filter select {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 180px;
+  font-size: 14px;
+}
 .button-container {
   position: relative;
 }
@@ -114,7 +118,6 @@
   background-color: #4caf50;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
   border-radius: 4px;
   height: 36px;
   width: 90px;

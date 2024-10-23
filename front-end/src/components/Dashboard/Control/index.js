@@ -10,10 +10,10 @@ function Control() {
   const [statusFan, setStatusFan] = useState(false);
   const [loadingFan, setLoadingFan] = useState(false);
   const [statusAC, setStatusAC] = useState(false);
-  const [loadingAC, setLoadingAC] = useState(false); // Thêm trạng thái loading cho AC
+  const [loadingAC, setLoadingAC] = useState(false);
   const [statusLight, setStatusLight] = useState(false);
-  const [loadingLight, setLoadingLight] = useState(false); // Thêm trạng thái loading cho Light
-
+  const [loadingLight, setLoadingLight] = useState(false); 
+  
   const sendControlCommand = async (device, action, setStatus, setLoading) => {
     setLoading(true); // Hiển thị trạng thái chờ khi gửi lệnh
     try {

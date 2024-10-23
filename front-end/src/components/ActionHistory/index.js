@@ -29,8 +29,8 @@ const ActionHistory = () => {
             params: {
               page: currentPage,
               limit,
-              startTime : startISO,
-              endTime : endISO,
+              startTime: startISO,
+              endTime: endISO,
               device,
               action,
               sortColumn,
@@ -43,7 +43,7 @@ const ActionHistory = () => {
         setFilteredData(response.data.results);
         setTotalPages(Math.ceil(response.data.total / limit));
       } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
+        console.error("Error API:", error);
       }
     };
 
@@ -81,7 +81,7 @@ const ActionHistory = () => {
     } else {
       // Chỉ hiển thị "Trang đầu" nếu trang hiện tại không phải là trang đầu
       if (currentPage > 2) {
-        pages.push("Trang đầu");
+        pages.push("First page");
       }
       // Hiển thị dấu ba chấm trước nếu trang hiện tại > 4
       if (currentPage > 2) {
@@ -99,7 +99,7 @@ const ActionHistory = () => {
       }
       // Chỉ hiển thị "Trang cuối" nếu trang hiện tại không phải là trang cuối
       if (currentPage < totalPages - 1) {
-        pages.push("Trang cuối");
+        pages.push("Last page");
       }
     }
 
@@ -132,26 +132,27 @@ const ActionHistory = () => {
         </label>
         <label>
           Device:
-          <input
-            type="text"
-            value={device}
-            onChange={(e) => setDevice(e.target.value)}
-          />
+          <select value={device} onChange={(e) => setDevice(e.target.value)}>
+            <option value="">-- Select a Device --</option>
+            <option value="Fan">Fan</option>
+            <option value="Air-conditioner">Air-conditioner</option>
+            <option value="Light">Light</option>
+          </select>
         </label>
         <label>
           Action:
-          <input
-            type="text"
-            value={action}
-            onChange={(e) => setAction(e.target.value)}
-          />
+          <select value={action} onChange={(e) => setAction(e.target.value)}>
+            <option value="">-- Select an Action --</option>
+            <option value="On">On</option>
+            <option value="Off">Off</option>
+          </select>
         </label>
         <div className="button-container">
-          <button onClick={handleSearch}>Tìm kiếm</button>
+          <button onClick={handleSearch}>Search</button>
         </div>
       </div>
 
-      <table className="data-sensors">
+      <table className="action-history">
         <thead>
           <tr>
             <th className="top-left">
@@ -172,7 +173,7 @@ const ActionHistory = () => {
               </span>
             </th>
             <th>
-              Thiết bị
+              Device
               <span className="button-sort">
                 <span
                   onClick={() => handleSort("device", "asc")}
@@ -189,7 +190,7 @@ const ActionHistory = () => {
               </span>
             </th>
             <th>
-              Trạng thái
+              Action
               <span className="button-sort">
                 <span
                   onClick={() => handleSort("action", "asc")}
@@ -206,7 +207,7 @@ const ActionHistory = () => {
               </span>
             </th>
             <th className="top-right">
-              Thời gian
+              Time
               <span className="button-sort">
                 <span
                   onClick={() => handleSort("timestamp", "asc")}
@@ -248,9 +249,9 @@ const ActionHistory = () => {
           <button
             key={index}
             onClick={() => {
-              if (page === "Trang đầu") {
+              if (page === "First page") {
                 handlePageChange(1);
-              } else if (page === "Trang cuối") {
+              } else if (page === "Last page") {
                 handlePageChange(totalPages);
               } else {
                 handlePageChange(page);
@@ -258,8 +259,8 @@ const ActionHistory = () => {
             }}
             className={currentPage === page ? "active" : ""}
             disabled={
-              (page === "Trang đầu" && currentPage === 1) ||
-              (page === "Trang cuối" && currentPage === totalPages)
+              (page === "First page" && currentPage === 1) ||
+              (page === "Last page" && currentPage === totalPages)
             }
           >
             {page}

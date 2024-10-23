@@ -28,8 +28,8 @@ const DataSensor = () => {
             params: {
               page: currentPage,
               limit,
-              startTime : startISO,
-              endTime : endISO,
+              startTime: startISO,
+              endTime: endISO,
               temperature,
               humidity,
               light,
@@ -78,7 +78,7 @@ const DataSensor = () => {
     } else {
       // Chỉ hiển thị "Trang đầu" nếu trang hiện tại không phải là trang đầu
       if (currentPage > 2) {
-        pages.push("Trang đầu");
+        pages.push("First page");
       }
       // Hiển thị dấu ba chấm trước nếu trang hiện tại > 2
       if (currentPage > 2) {
@@ -96,7 +96,7 @@ const DataSensor = () => {
       }
       // Chỉ hiển thị "Trang cuối" nếu trang hiện tại không phải là trang cuối
       if (currentPage < totalPages - 1) {
-        pages.push("Trang cuối");
+        pages.push("Last page");
       }
     }
 
@@ -109,7 +109,7 @@ const DataSensor = () => {
   };
 
   return (
-    <div className="data-sensor-container">
+    <div className="data-sensors-container">
       <div className="filter">
         <label>
           Start Time:
@@ -151,38 +151,98 @@ const DataSensor = () => {
             onChange={(e) => setLight(e.target.value)}
           />
         </label>
-        <button onClick={handleSearch}>Tìm kiếm</button>
+        <div className="button-container">
+          <button onClick={handleSearch}>Search</button>
+        </div>
       </div>
 
       <table className="data-sensors">
         <thead>
           <tr>
-            <th>
+            <th className="top-left">
               ID
-              <GoTriangleUp onClick={() => handleSort("id", "asc")} />
-              <GoTriangleDown onClick={() => handleSort("id", "desc")} />
+              <span className="button-sort">
+                <span
+                  onClick={() => handleSort("id", "asc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleUp />
+                </span>
+                <span
+                  onClick={() => handleSort("id", "desc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleDown />
+                </span>
+              </span>
             </th>
             <th>
               Temperature
-              <GoTriangleUp onClick={() => handleSort("temperature", "asc")} />
-              <GoTriangleDown
-                onClick={() => handleSort("temperature", "desc")}
-              />
+              <span className="button-sort">
+                <span
+                  onClick={() => handleSort("temperature", "asc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleUp />
+                </span>
+                <span
+                  onClick={() => handleSort("temperature", "desc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleDown />
+                </span>
+              </span>
             </th>
             <th>
               Humidity
-              <GoTriangleUp onClick={() => handleSort("humidity", "asc")} />
-              <GoTriangleDown onClick={() => handleSort("humidity", "desc")} />
+              <span className="button-sort">
+                <span
+                  onClick={() => handleSort("humidity", "asc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleUp />
+                </span>
+                <span
+                  onClick={() => handleSort("humidity", "desc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleDown />
+                </span>
+              </span>
             </th>
             <th>
               Light
-              <GoTriangleUp onClick={() => handleSort("light", "asc")} />
-              <GoTriangleDown onClick={() => handleSort("light", "desc")} />
+              <span className="button-sort">
+                <span
+                  onClick={() => handleSort("light", "asc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleUp />
+                </span>
+                <span
+                  onClick={() => handleSort("light", "desc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleDown />
+                </span>
+              </span>
             </th>
             <th>
-              Timestamp
-              <GoTriangleUp onClick={() => handleSort("timestamp", "asc")} />
-              <GoTriangleDown onClick={() => handleSort("timestamp", "desc")} />
+              Time
+              <span className="button-sort">
+                <span
+                  onClick={() => handleSort("timestamp", "asc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleUp />
+                </span>
+                <span
+                  onClick={() => handleSort("timestamp", "desc")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <GoTriangleDown />
+                </span>
+              </span>
             </th>
           </tr>
         </thead>
@@ -210,9 +270,9 @@ const DataSensor = () => {
           <button
             key={index}
             onClick={() => {
-              if (page === "Trang đầu") {
+              if (page === "First page") {
                 handlePageChange(1);
-              } else if (page === "Trang cuối") {
+              } else if (page === "Last page") {
                 handlePageChange(totalPages);
               } else {
                 handlePageChange(page);
@@ -220,8 +280,8 @@ const DataSensor = () => {
             }}
             className={currentPage === page ? "active" : ""}
             disabled={
-              (page === "Trang đầu" && currentPage === 1) ||
-              (page === "Trang cuối" && currentPage === totalPages)
+              (page === "First page" && currentPage === 1) ||
+              (page === "Last page" && currentPage === totalPages)
             }
           >
             {page}

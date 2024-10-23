@@ -47,28 +47,13 @@
   background-color: #4caf50;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
   border-radius: 4px;
   height: 36px;
-  width: 90px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.pagination button:disabled {
-  background-color: #ffffff;
-  cursor: not-allowed;
-}
-
-.pagination button:hover:not(:disabled) {
-  background-color: #45a049;
-}
-
-.pagination span {
-  font-size: 16px;
-  margin: 0 10px;
-  color: #ffffff;
+  margin-left: 2px;
 }
 
 .top-left {
@@ -114,7 +99,6 @@
   background-color: #4caf50;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
   border-radius: 4px;
   height: 36px;
   width: 90px;
