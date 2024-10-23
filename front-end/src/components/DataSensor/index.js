@@ -227,7 +227,7 @@ const DataSensor = () => {
                 </span>
               </span>
             </th>
-            <th>
+            <th className="top-right">
               Time
               <span className="button-sort">
                 <span
@@ -248,15 +248,20 @@ const DataSensor = () => {
         </thead>
         <tbody>
           {filteredData.length > 0 ? (
-            filteredData.map((item) => (
-              <tr key={item.timestamp}>
-                <td>{item.id}</td>
-                <td>{item.temperature}</td>
-                <td>{item.humidity}</td>
-                <td>{item.light}</td>
-                <td>{new Date(item.timestamp).toLocaleString()}</td>
-              </tr>
-            ))
+            filteredData.map((item, index) => {
+              const isLastRow = index === filteredData.length - 1;
+              return (
+                <tr key={item.timestamp}>
+                  <td className={isLastRow ? "bot-left" : ""}>{item.id}</td>
+                  <td>{item.temperature}</td>
+                  <td>{item.humidity}</td>
+                  <td>{item.light}</td>
+                  <td className={isLastRow ? "bot-right" : ""}>
+                    {new Date(item.timestamp).toLocaleString()}
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td colSpan="5">No data available</td>

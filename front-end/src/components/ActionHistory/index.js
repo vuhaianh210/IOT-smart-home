@@ -227,14 +227,17 @@ const ActionHistory = () => {
         </thead>
         <tbody>
           {filteredData.length > 0 ? (
-            filteredData.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.device}</td>
-                <td>{item.action}</td>
-                <td>{new Date(item.timestamp).toLocaleString()}</td>
-              </tr>
-            ))
+            filteredData.map((item, index) => {
+              const isLastRow = index === filteredData.length - 1;
+              return (
+                <tr key={item.id}>
+                  <td className={isLastRow ? "bot-left" : ""}>{item.id}</td>
+                  <td>{item.device}</td>
+                  <td>{item.action}</td>
+                  <td className={isLastRow ? "bot-right" : ""}>{new Date(item.timestamp).toLocaleString()}</td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td colSpan="4">No data available</td>

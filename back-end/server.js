@@ -57,11 +57,9 @@ app.post("/api/devices/control", async (req, res) => {
     return res.status(200).send({ device, status: deviceStatus });
   } catch (error) {
     // Gửi phản hồi lỗi về phía client nếu có vấn đề
-    return res
-      .status(500)
-      .send({
-        error: error.message || "Failed to control device or save to database",
-      });
+    return res.status(500).send({
+      error: error.message || "Failed to control device or save to database",
+    });
   }
 });
 
@@ -185,6 +183,75 @@ app.get("/api/devices/history", async (req, res) => {
     res.status(500).send({ error: "Database error" });
   }
 });
+
+// 4.
+app.get("/api/sensors/alerts", async (req, res) => {
+  const { temperature, humidity, light } = req.query;
+
+  try {
+    const request = new sql.Request();
+
+    // Validate thresholds
+    if (temperature && isNaN(temperature)) {
+      return res.status(400).send({ error: "Invalid temperature threshold" });
+    }
+    if (humidity && isNaN(humidity)) {
+      return res.status(400).send({ error: "Invalid humidity threshold" });
+    }
+    if (light && isNaN(light)) {
+      return res.status(400).send({ error: "Invalid light threshold" });
+    }
+
+    let temperatureAlertCount = 0;
+    if (temperature) {
+      const temperatureResult = await request.input('temperature', sql.Float, temperature)
+        .query(`
+          SELECT COUNT(*) as temperatureAlertCount FROM datasensor
+          WHERE temperature > @temperature
+          AND timestamp BETWEEN 
+            DATEADD(HOUR, 7, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) 
+            AND DATEADD(HOUR, 7, GETDATE())
+        `);
+      temperatureAlertCount = temperatureResult.recordset[0].temperatureAlertCount;
+    }
+
+    let humidityAlertCount = 0;
+    if (humidity) {
+      const humidityResult = await request.input('humidity', sql.Float, humidity)
+        .query(`
+          SELECT COUNT(*) as humidityAlertCount FROM datasensor
+          WHERE humidity > @humidity
+          AND timestamp BETWEEN 
+            DATEADD(HOUR, 7, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) 
+            AND DATEADD(HOUR, 7, GETDATE())
+        `);
+      humidityAlertCount = humidityResult.recordset[0].humidityAlertCount;
+    }
+
+    let lightAlertCount = 0;
+    if (light) {
+      const lightResult = await request.input('light', sql.Float, light)
+        .query(`
+          SELECT COUNT(*) as lightAlertCount FROM datasensor
+          WHERE light > @light
+          AND timestamp BETWEEN 
+            DATEADD(HOUR, 7, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) 
+            AND DATEADD(HOUR, 7, GETDATE())
+        `);
+      lightAlertCount = lightResult.recordset[0].lightAlertCount;
+    }
+
+    res.status(200).send({
+      temperatureAlertCount,
+      humidityAlertCount,
+      lightAlertCount,
+    });
+  } catch (error) {
+    console.error(error); // Log the error
+    res.status(500).send({ error: "An unexpected error occurred" });
+  }
+});
+
 
 // Chạy server
 const PORT = 5000;

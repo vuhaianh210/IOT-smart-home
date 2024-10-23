@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import "./Layout.css";
+import Alert from "../Alert";
 function Layout() {
   const navLinkActive = (e) => {
     return e.isActive ? "actived" : "";
@@ -36,6 +37,7 @@ function Layout() {
         <div className="content">
           <Outlet />
         </div>
+        <Alert />
       </div>
     </>
   );
