@@ -204,39 +204,63 @@ app.get("/api/sensors/alerts", async (req, res) => {
 
     let temperatureAlertCount = 0;
     if (temperature) {
-      const temperatureResult = await request.input('temperature', sql.Float, temperature)
-        .query(`
-          SELECT COUNT(*) as temperatureAlertCount FROM datasensor
-          WHERE temperature > @temperature
-          AND timestamp BETWEEN 
-            DATEADD(HOUR, 7, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) 
-            AND DATEADD(HOUR, 7, GETDATE())
+      const temperatureResult = await request.input(
+        "temperature",
+        sql.Float,
+        temperature
+      ).query(`
+          SELECT COUNT(*) AS temperatureAlertCount
+          FROM (
+              SELECT 
+                  temperature,
+                  LAG(temperature) OVER (ORDER BY timestamp) AS previous_temperature
+              FROM DataSensor
+              WHERE timestamp BETWEEN 
+                  DATEADD(HOUR, 7, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) 
+                  AND DATEADD(HOUR, 7, GETDATE())
+          ) AS temperature_changes
+          WHERE temperature > @temperature AND previous_temperature <= @temperature;
         `);
-      temperatureAlertCount = temperatureResult.recordset[0].temperatureAlertCount;
+      temperatureAlertCount =
+        temperatureResult.recordset[0].temperatureAlertCount;
     }
 
     let humidityAlertCount = 0;
     if (humidity) {
-      const humidityResult = await request.input('humidity', sql.Float, humidity)
-        .query(`
-          SELECT COUNT(*) as humidityAlertCount FROM datasensor
-          WHERE humidity > @humidity
-          AND timestamp BETWEEN 
-            DATEADD(HOUR, 7, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) 
-            AND DATEADD(HOUR, 7, GETDATE())
+      const humidityResult = await request.input(
+        "humidity",
+        sql.Float,
+        humidity
+      ).query(`
+          SELECT COUNT(*) AS humidityAlertCount
+          FROM (
+              SELECT 
+                  humidity,
+                  LAG(humidity) OVER (ORDER BY timestamp) AS previous_humidity
+              FROM DataSensor
+              WHERE timestamp BETWEEN 
+                  DATEADD(HOUR, 7, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) 
+                  AND DATEADD(HOUR, 7, GETDATE())
+          ) AS humidity_changes
+          WHERE humidity > @humidity AND previous_humidity <= @humidity;
         `);
       humidityAlertCount = humidityResult.recordset[0].humidityAlertCount;
     }
 
     let lightAlertCount = 0;
     if (light) {
-      const lightResult = await request.input('light', sql.Float, light)
-        .query(`
-          SELECT COUNT(*) as lightAlertCount FROM datasensor
-          WHERE light > @light
-          AND timestamp BETWEEN 
-            DATEADD(HOUR, 7, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) 
-            AND DATEADD(HOUR, 7, GETDATE())
+      const lightResult = await request.input("light", sql.Float, light).query(`
+        SELECT COUNT(*) AS lightAlertCount
+          FROM (
+              SELECT 
+                  light,
+                  LAG(light) OVER (ORDER BY timestamp) AS previous_light
+              FROM DataSensor
+              WHERE timestamp BETWEEN 
+                  DATEADD(HOUR, 7, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) 
+                  AND DATEADD(HOUR, 7, GETDATE())
+          ) AS light_changes
+          WHERE light > @light AND previous_light <= @light;
         `);
       lightAlertCount = lightResult.recordset[0].lightAlertCount;
     }
@@ -251,7 +275,6 @@ app.get("/api/sensors/alerts", async (req, res) => {
     res.status(500).send({ error: "An unexpected error occurred" });
   }
 });
-
 
 // Chạy server
 const PORT = 5000;
