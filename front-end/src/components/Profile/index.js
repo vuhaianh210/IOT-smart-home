@@ -22,7 +22,7 @@ function Profile() {
               <div className="info-detail">
                 Báo cáo:{" "}
                 <a
-                  href="https://drive.google.com/file/d/1K6Aqthmk1IVyVNb7iqMnfDRNA2zQKyyz/view"
+                  href="https://docs.google.com/document/d/1cDzQpw65fTBniN83w0vqlp14fk4sn1acfIHfKK6A_J0/edit?usp=sharing"
                   target="_blank"
                   rel="noreferrer"
                 >
