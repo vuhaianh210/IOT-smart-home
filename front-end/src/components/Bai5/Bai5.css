@@ -1,0 +1,26 @@
+.bai5 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wind {
+  background-color: #561853;
+  border-radius: 4px;
+  justify-content: center;
+  justify-items: center;
+  flex: 1;
+  margin-right: 20px;
+  width: 300px;
+  height: 300px;
+}
+
+.alert {
+  background-color: #561853;
+  border-radius: 4px;
+  justify-content: center;
+  justify-items: center;
+  flex: 1;
+  width: 300px;
+  height: 300px;
+}
+

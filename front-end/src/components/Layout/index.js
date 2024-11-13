@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import "./Layout.css";
-import Alert from "../Alert";
+
 function Layout() {
   const navLinkActive = (e) => {
     return e.isActive ? "actived" : "";
@@ -31,13 +31,18 @@ function Layout() {
                 Profile
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/bai5" className={navLinkActive}>
+                Bai5
+              </NavLink>
+            </li>
           </ul>
         </div>
         </div>
         <div className="content">
           <Outlet />
         </div>
-        <Alert />
+
       </div>
     </>
   );

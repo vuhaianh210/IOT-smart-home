@@ -275,7 +275,17 @@ app.get("/api/sensors/alerts", async (req, res) => {
     res.status(500).send({ error: "An unexpected error occurred" });
   }
 });
-
+//5.
+app.get('/api/wind', async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().query('SELECT TOP 10 * FROM DataSensor ORDER BY date DESC');
+    res.json(result.recordset); // Trả về dữ liệu dưới dạng JSON
+  } catch (error) {
+    console.error('Lỗi truy vấn SQL:', error);
+    res.status(500).json({ error: 'Lỗi khi lấy dữ liệu wind từ database.' });
+  }
+});
 // Chạy server
 const PORT = 5000;
 app.listen(PORT, () => {

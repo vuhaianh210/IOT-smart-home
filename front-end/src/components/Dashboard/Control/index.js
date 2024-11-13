@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Control.css";
 import { FaFan } from "react-icons/fa";
 import { TbAirConditioningDisabled } from "react-icons/tb";
@@ -7,13 +7,25 @@ import { FaLightbulb } from "react-icons/fa6";
 import axios from "axios";
 
 function Control() {
-  const [statusFan, setStatusFan] = useState(false);
+  const [statusFan, setStatusFan] = useState(() => JSON.parse(localStorage.getItem("statusFan")) || false);
   const [loadingFan, setLoadingFan] = useState(false);
-  const [statusAC, setStatusAC] = useState(false);
+  const [statusAC, setStatusAC] = useState(() => JSON.parse(localStorage.getItem("statusAC")) || false);
   const [loadingAC, setLoadingAC] = useState(false);
-  const [statusLight, setStatusLight] = useState(false);
-  const [loadingLight, setLoadingLight] = useState(false); 
+  const [statusLight, setStatusLight] = useState(() => JSON.parse(localStorage.getItem("statusLight")) || false);
+  const [loadingLight, setLoadingLight] = useState(false);
   
+  useEffect(() => {
+    localStorage.setItem("statusFan", JSON.stringify(statusFan));
+  }, [statusFan]);
+
+  useEffect(() => {
+    localStorage.setItem("statusAC", JSON.stringify(statusAC));
+  }, [statusAC]);
+
+  useEffect(() => {
+    localStorage.setItem("statusLight", JSON.stringify(statusLight));
+  }, [statusLight]);
+
   const sendControlCommand = async (device, action, setStatus, setLoading) => {
     setLoading(true); // Hiển thị trạng thái chờ khi gửi lệnh
     try {
